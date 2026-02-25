@@ -1,6 +1,11 @@
+import { Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import AuthPage from "./AuthPage";
 import Dashboard from "./Dashboard";
+import TransactionsPage from "./TransactionsPage";
+import ReportsPage from "./ReportsPage";
+import AppLayout from "@/components/AppLayout";
+import NotFound from "./NotFound";
 
 const Index = () => {
   const { user, loading } = useAuth();
@@ -13,7 +18,18 @@ const Index = () => {
     );
   }
 
-  return user ? <Dashboard /> : <AuthPage />;
+  if (!user) return <AuthPage />;
+
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="transactions" element={<TransactionsPage />} />
+        <Route path="reports" element={<ReportsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  );
 };
 
 export default Index;
